@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#e0e0e0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="600" height="400" rx="15" fill="url(#bgGradient)"/>
+  
+  <!-- Step 1: Upload -->
+  <g transform="translate(50, 80)">
+    <circle cx="30" cy="30" r="25" fill="rgba(255,255,255,0.2)"/>
+    <text x="30" y="38" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold">1</text>
+    <rect x="80" y="10" width="100" height="40" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <line x1="85" y1="25" x2="165" y2="25" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="85" y1="35" x2="140" y2="35" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Arrow 1 -->
+  <path d="M200 140 L230 130 L230 150 Z" fill="rgba(255,255,255,0.5)"/>
+  
+  <!-- Step 2: AI Generation -->
+  <g transform="translate(250, 80)">
+    <circle cx="30" cy="30" r="25" fill="rgba(255,255,255,0.2)"/>
+    <text x="30" y="38" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold">2</text>
+    <rect x="80" y="10" width="100" height="40" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <!-- Brain/AI icon -->
+    <path d="M95 25 Q105 15 115 25 Q125 35 115 40 Q105 35 95 25 M105 22 L105 32 M100 27 L110 27" stroke="white" stroke-width="2" fill="none"/>
+    <circle cx="130" cy="30" r="8" fill="none" stroke="white" stroke-width="2"/>
+    <circle cx="130" cy="30" r="3" fill="white"/>
+  </g>
+  
+  <!-- Arrow 2 -->
+  <path d="M400 140 L430 130 L430 150 Z" fill="rgba(255,255,255,0.5)"/>
+  
+  <!-- Step 3: Take & Learn -->
+  <g transform="translate(450, 80)">
+    <circle cx="30" cy="30" r="25" fill="rgba(255,255,255,0.2)"/>
+    <text x="30" y="38" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold">3</text>
+    <rect x="80" y="10" width="100" height="40" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <!-- Checkmark -->
+    <path d="M100 30 L115 45 L145 15" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Bottom section - Result -->
+  <rect x="50" y="200" width="500" height="150" rx="10" fill="rgba(255,255,255,0.1)"/>
+  <text x="300" y="240" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Get Instant Results</text>
+  
+  <!-- Chart bars -->
+  <rect x="100" y="280" width="40" height="50" rx="5" fill="rgba(255,255,255,0.8)"/>
+  <rect x="170" y="260" width="40" height="70" rx="5" fill="rgba(255,255,255,0.9)"/>
+  <rect x="240" y="250" width="40" height="80" rx="5" fill="white"/>
+  <rect x="310" y="270" width="40" height="60" rx="5" fill="rgba(255,255,255,0.9)"/>
+  <rect x="380" y="290" width="40" height="40" rx="5" fill="rgba(255,255,255,0.7)"/>
+  <rect x="450" y="255" width="40" height="75" rx="5" fill="rgba(255,255,255,0.85)"/>
+  
+  <!-- Title text -->
+  <text x="300" y="370" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">How It Works</text>
+</svg>

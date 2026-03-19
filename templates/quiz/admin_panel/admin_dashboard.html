@@ -1,0 +1,726 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Admin Dashboard - QuizGenix{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ===== PREMIUM ADMIN DASHBOARD STYLES ===== */
+    
+    /* Dashboard Header */
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-header h2 {
+        color: var(--text-primary);
+        font-size: 2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        letter-spacing: -0.5px;
+    }
+
+    .dashboard-header h2 i {
+        color: var(--accent-purple);
+        font-size: 1.75rem;
+    }
+
+    .dashboard-header p {
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        font-size: 1rem;
+    }
+
+    /* Welcome Banner */
+    .welcome-banner {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--gradient-main);
+    }
+
+    .welcome-banner .welcome-text {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+    }
+
+    .welcome-banner .welcome-text .avatar-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: var(--gradient-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: var(--shadow-glow-purple);
+    }
+
+    .welcome-banner .welcome-text h4 {
+        color: var(--text-primary);
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+
+    .welcome-banner .welcome-text p {
+        color: var(--text-muted);
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: var(--transition-smooth);
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--gradient-main);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl), var(--shadow-glow-purple);
+        border-color: var(--accent-purple);
+    }
+
+    .stat-card .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .stat-card .stat-icon.users {
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .stat-card .stat-icon.quizzes {
+        background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+    }
+
+    .stat-card .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .stat-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    /* Management Cards */
+    .management-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .management-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        transition: var(--transition-smooth);
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .management-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--gradient-main);
+        opacity: 0;
+        transition: var(--transition-smooth);
+    }
+
+    .management-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl), var(--shadow-glow-purple);
+        border-color: var(--accent-purple);
+    }
+
+    .management-card .card-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+        color: white;
+        position: relative;
+        z-index: 1;
+    }
+
+    .management-card.users-card .card-icon {
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        box-shadow: var(--shadow-glow-blue);
+    }
+
+    .management-card.quizzes-card .card-icon {
+        background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+    }
+
+    .management-card h3 {
+        color: var(--text-primary);
+        font-size: 1.35rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .management-card p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .management-card .card-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--accent-purple);
+        font-weight: 600;
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .management-card:hover .card-action {
+        color: var(--accent-pink);
+        gap: 0.75rem;
+    }
+
+    /* Section Headers */
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .section-header h3 {
+        color: var(--text-primary);
+        font-size: 1.35rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-header h3 i {
+        color: var(--accent-purple);
+    }
+
+    /* ===== PREMIUM TABLE STYLES ===== */
+    .data-table {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 2.5rem;
+    }
+
+    .data-table .table {
+        margin-bottom: 0;
+        color: var(--text-primary);
+    }
+
+    .data-table .table thead th {
+        background: var(--bg-secondary);
+        border-bottom: 2px solid var(--border-color);
+        color: #f8fafc !important;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 1.25rem 1rem;
+        white-space: nowrap;
+    }
+
+    .data-table .table thead th:first-child {
+        border-top-left-radius: 0;
+    }
+
+    .data-table .table thead th:last-child {
+        border-top-right-radius: 0;
+    }
+
+    .data-table .table tbody tr {
+        transition: var(--transition-fast);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table .table tbody tr:nth-child(even) {
+        background: rgba(30, 41, 59, 0.4);
+    }
+
+    .data-table .table tbody tr:hover {
+        background: rgba(139, 92, 246, 0.08);
+    }
+
+    .data-table .table tbody td {
+        background: transparent;
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .data-table .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* ===== TABLE BODY TEXT COLORS FOR DARK THEME ===== */
+    /* Main content - soft white */
+    .data-table .table tbody td {
+        color: #E2E8F0;
+    }
+
+    /* Secondary content - muted light gray (emails, dates) */
+    .data-table .table tbody td:nth-child(3),
+    .data-table .table tbody td:nth-child(5),
+    .data-table .table tbody td.text-muted {
+        color: #CBD5E1;
+    }
+
+    /* ===== PREMIUM BADGES ===== */
+    .badge-admin {
+        background: rgba(139, 92, 246, 0.15);
+        color: #8b5cf6;
+        padding: 0.4rem 0.875rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        box-shadow: 0 0 12px rgba(139, 92, 246, 0.15);
+    }
+
+    .badge-approved {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        padding: 0.4rem 0.875rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+    }
+
+    .badge-waiting {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        padding: 0.4rem 0.875rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
+    }
+
+    .badge-rejected {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        padding: 0.4rem 0.875rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+    }
+
+    .badge-easy {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-medium {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-hard {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+    .btn-action {
+        padding: 0.5rem 0.875rem;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: var(--transition-smooth);
+        text-decoration: none;
+        border: 1px solid transparent;
+    }
+
+    .btn-approve {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-approve:hover {
+        background: #10b981;
+        color: white;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .btn-reject {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-reject:hover {
+        background: #ef4444;
+        color: white;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .btn-view {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-view:hover {
+        background: #3b82f6;
+        color: white;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        transform: translateY(-2px);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.4;
+        color: var(--accent-purple);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .management-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .data-table {
+            overflow-x: auto;
+        }
+
+        .welcome-banner {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .welcome-banner .welcome-text {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h2>
+        <i class="fas fa-cogs"></i>
+        Admin Dashboard
+    </h2>
+    <p>Manage users and view all quizzes in the system</p>
+</div>
+
+<!-- Welcome Banner -->
+<div class="welcome-banner">
+    <div class="welcome-text">
+        <div class="avatar-icon">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        <div>
+            <h4>Welcome, {{ user.username }}</h4>
+            <p>You have full access to manage the QuizGenix platform</p>
+        </div>
+    </div>
+    <a href="{% url 'admin_logout' %}" class="btn-premium">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon users">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value">{{ total_users }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon quizzes">
+            <i class="fas fa-list-ol"></i>
+        </div>
+        <div class="stat-value">{{ total_quizzes }}</div>
+        <div class="stat-label">Total Quizzes</div>
+    </div>
+</div>
+
+<!-- Management Cards -->
+<div class="management-grid">
+    <a href="#users-section" class="management-card users-card">
+        <div class="card-icon">
+            <i class="fas fa-users-cog"></i>
+        </div>
+        <h3>Manage Users</h3>
+        <p>View, approve, reject, and manage all registered users</p>
+        <span class="card-action">
+            <i class="fas fa-arrow-right"></i> Manage Users
+        </span>
+    </a>
+    <a href="#quizzes-section" class="management-card quizzes-card">
+        <div class="card-icon">
+            <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h3>Manage Quizzes</h3>
+        <p>View all quizzes created by users and their details</p>
+        <span class="card-action">
+            <i class="fas fa-arrow-right"></i> Manage Quizzes
+        </span>
+    </a>
+</div>
+
+<!-- Users Management Section -->
+<div class="section-header" id="users-section">
+    <h3>
+        <i class="fas fa-users"></i> User Management
+    </h3>
+</div>
+
+<div class="data-table mb-4">
+    {% if users %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Joined Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            {% if user.profile.name %}
+                                {{ user.profile.name }}
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ user.username }}</strong>
+                            {% if user.is_staff %}
+                                <span class="badge-admin ms-1">Admin</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user.is_staff %}
+                                <span class="badge-admin">Admin</span>
+                            {% else %}
+                                {% with status=user_profiles|default:user.is_active %}
+                                    {% if user.is_active %}
+                                        <span class="badge-approved">Approved</span>
+                                    {% else %}
+                                        <span class="badge-waiting">Waiting</span>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endif %}
+                        </td>
+                        <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            {% if user != request.user and not user.is_staff %}
+                                {% if user.is_active %}
+                                    <a href="{% url 'reject_user' user.id %}" 
+                                       class="btn-action btn-reject"
+                                       onclick="return confirm('Are you sure you want to reject this user?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'approve_user' user.id %}" 
+                                       class="btn-action btn-approve"
+                                       onclick="return confirm('Are you sure you want to approve this user?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted"><i class="fas fa-lock"></i> -</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>No users found</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Quizzes Section -->
+<div class="section-header" id="quizzes-section">
+    <h3>
+        <i class="fas fa-list-ol"></i> All Quizzes
+    </h3>
+</div>
+
+<div class="data-table">
+    {% if quizzes %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>User</th>
+                        <th>Difficulty</th>
+                        <th>Questions</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quiz in quizzes %}
+                    <tr>
+                        <td><strong>{{ quiz.subject }}</strong></td>
+                        <td>{{ quiz.user.username }}</td>
+                        <td>
+                            <span class="badge badge-{{ quiz.difficulty|lower }}">
+                                {{ quiz.difficulty }}
+                            </span>
+                        </td>
+                        <td>{{ quiz.questions.count }}</td>
+                        <td>{{ quiz.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'quiz_detail' quiz.id %}" class="btn-action btn-view">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-clipboard-list"></i>
+            <p>No quizzes found</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

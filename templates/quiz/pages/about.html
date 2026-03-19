@@ -1,0 +1,221 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+{% block title %}About - QuizGenix{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-section {
+        padding: 40px 0;
+    }
+    .feature-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+    .feature-icon i {
+        font-size: 28px;
+        color: white;
+    }
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 50px;
+        color: white;
+        margin-bottom: 40px;
+    }
+    .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .team-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .team-card .card-body {
+        padding: 25px;
+    }
+    .team-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 28px;
+        color: white;
+        font-weight: bold;
+    }
+    .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <!-- Hero Section -->
+    <div class="about-hero text-center mb-5">
+        <h1 class="display-4 mb-3">Welcome to QuizGenix</h1>
+        <p class="lead mb-0">AI-Powered Quiz Generation Platform</p>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">Our Mission</h2>
+            <p class="lead text-muted">
+                QuizGenix is designed to revolutionize the way educators, trainers, and organizations create and manage quizzes. 
+                By leveraging cutting-edge artificial intelligence, we make quiz creation effortless, fast, and intelligent.
+            </p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <h2 class="text-center mb-4">Why Choose QuizGenix?</h2>
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h4>AI-Powered Generation</h4>
+                <p class="text-muted mb-0">
+                    Our intelligent AI analyzes your content and generates relevant, high-quality questions automatically.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h4>PDF to Quiz</h4>
+                <p class="text-muted mb-0">
+                    Simply upload your PDF documents, and we'll create comprehensive quizzes from the content.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Performance Analytics</h4>
+                <p class="text-muted mb-0">
+                    Track user performance with detailed analytics and get AI-generated feedback for improvement.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3 col-6">
+            <div class="stats-card">
+                <div class="stats-number">10K+</div>
+                <p class="text-muted mb-0">Quizzes Created</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stats-card">
+                <div class="stats-number">50K+</div>
+                <p class="text-muted mb-0">Questions Generated</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stats-card">
+                <div class="stats-number">5K+</div>
+                <p class="text-muted mb-0">Active Users</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stats-card">
+                <div class="stats-number">99.9%</div>
+                <p class="text-muted mb-0">Uptime</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <div class="card border-0 bg-light">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-number me-3">1</div>
+                        <h5 class="mb-0">Upload Content</h5>
+                    </div>
+                    <p class="text-muted mb-4">Upload your study materials - PDFs, documents, or simply describe a topic.</p>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-number me-3">2</div>
+                        <h5 class="mb-0">AI Generation</h5>
+                    </div>
+                    <p class="text-muted mb-4">Our AI analyzes the content and generates relevant quiz questions instantly.</p>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-number me-3">3</div>
+                        <h5 class="mb-0">Take & Learn</h5>
+                    </div>
+                    <p class="text-muted mb-0">Users take the quiz and receive instant feedback with performance insights.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <img src="{% static 'images/ai-quiz-hero.svg' %}" alt="AI About" class="img-fluid rounded-3 shadow">
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center">
+        <h3 class="mb-4">Ready to Get Started?</h3>
+        <p class="text-muted mb-4">Join thousands of educators and learners using QuizGenix</p>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5">
+            <i class="fas fa-user-plus me-2"></i>Create Free Account
+        </a>
+    </div>
+</div>
+{% endblock %}

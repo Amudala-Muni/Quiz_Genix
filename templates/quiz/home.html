@@ -1,0 +1,546 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}QuizGenix - AI-Powered Quiz Creation{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ===== HOME PAGE SPECIFIC STYLES ===== */
+    
+    /* Override main-content padding - we handle spacing in hero itself */
+    .main-content {
+        padding-top: 0 !important;
+    }
+
+    /* ===== HERO SECTION ===== */
+    /* Full-screen hero with proper spacing from fixed navbar */
+    .hero {
+        min-height: 100vh;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: var(--gradient-hero);
+        padding: 0 2rem;
+        box-sizing: border-box;
+    }
+
+    .hero-content {
+        text-align: center;
+        max-width: 900px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(139, 92, 246, 0.15);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 50px;
+        font-size: 0.85rem;
+        color: var(--accent-purple);
+        margin-bottom: 1.5rem;
+        animation: fadeInDown 0.8s ease-out;
+    }
+
+    .hero-badge i {
+        font-size: 0.9rem;
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-title {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        letter-spacing: -1px;
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-title .gradient-text {
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1rem, 2vw, 1.35rem);
+        color: var(--text-muted);
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeInUp 0.8s ease-out 0.6s both;
+    }
+
+    .btn-start-creating {
+        padding: 1rem 2.5rem;
+        background: var(--gradient-main);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition-smooth);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-start-creating::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: 0.6s;
+    }
+
+    .btn-start-creating:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        color: white;
+    }
+
+    .btn-start-creating:hover::before {
+        left: 100%;
+    }
+
+    .btn-learn-more {
+        padding: 1rem 2.5rem;
+        background: transparent;
+        color: var(--text-light);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-learn-more:hover {
+        border-color: var(--accent-blue);
+        background: rgba(59, 130, 246, 0.1);
+        transform: translateY(-2px);
+        color: var(--text-light);
+    }
+
+    /* ===== FEATURES SECTION ===== */
+    .features {
+        padding: 100px 2rem;
+        position: relative;
+    }
+
+    .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-tag {
+        display: inline-block;
+        padding: 0.5rem 1.25rem;
+        background: rgba(6, 182, 212, 0.1);
+        border: 1px solid rgba(6, 182, 212, 0.3);
+        border-radius: 50px;
+        font-size: 0.85rem;
+        color: var(--accent-cyan);
+        font-weight: 500;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .section-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        letter-spacing: -0.5px;
+    }
+
+    .section-subtitle {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+
+    .feature-card {
+        background: rgba(30, 41, 59, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 2.5rem;
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+        opacity: 0;
+        transition: var(--transition-smooth);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(236, 72, 153, 0.2);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+
+    .feature-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background: var(--gradient-main);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-icon-wrapper i {
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    .feature-title {
+        font-size: 1.35rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .feature-description {
+        color: var(--text-muted);
+        line-height: 1.7;
+    }
+
+    .feature-card:nth-child(1) .feature-icon-wrapper {
+        background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    }
+
+    .feature-card:nth-child(2) .feature-icon-wrapper {
+        background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    }
+
+    .feature-card:nth-child(3) .feature-icon-wrapper {
+        background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+    }
+
+    /* ===== STATS SECTION ===== */
+    .stats {
+        padding: 80px 2rem;
+        background: rgba(30, 41, 59, 0.3);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .stats-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+        padding: 60px 2rem 30px;
+        background: rgba(15, 23, 42, 0.95);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer-logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+    }
+
+    .footer-links a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: var(--transition-smooth);
+    }
+
+    .footer-links a:hover {
+        color: var(--accent-purple);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-bottom p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 768px) {
+        .hero {
+            padding: 0 1.5rem;
+            min-height: calc(100vh - 60px);
+            height: calc(100vh - 60px);
+            margin-top: 70px;
+        }
+        
+        .hero-content {
+            padding: 0;
+        }
+        
+        .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn-start-creating,
+        .btn-learn-more {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .footer-links {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    /* Handle mobile viewport height for browsers with dynamic toolbars */
+    @supports (height: 100dvh) {
+        .hero {
+            height: calc(100dvh - 70px);
+            min-height: calc(100dvh - 70px);
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                height: calc(100dvh - 60px);
+                min-height: calc(100dvh - 60px);
+            }
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" id="home">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fas fa-rocket"></i>
+            <span>AI-Powered Quiz Generator</span>
+        </div>
+        
+        <h1 class="hero-title">
+            AI-Powered Quiz Generator
+        </h1>
+        
+        <p class="hero-subtitle">
+            Transform your topics and documents into engaging quizzes instantly. 
+            Powered by advanced AI to generate relevant questions 
+            tailored to your content.
+        </p>
+        
+        <div class="hero-buttons">
+            <a href="{% url 'register' %}" class="btn-start-creating">
+                <i class="fas fa-rocket me-2"></i>Get Started
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="features-container">
+        <div class="section-header">
+            <span class="section-tag">Features</span>
+            <h2 class="section-title">Powerful Features</h2>
+            <p class="section-subtitle">
+                Everything you need to create engaging quizzes quickly and easily
+            </p>
+        </div>
+        
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="feature-title">AI-Powered Generation</h3>
+                <p class="feature-description">
+                    Our intelligent AI analyzes your documents and automatically 
+                    generates relevant, high-quality quiz questions.
+                </p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h3 class="feature-title">PDF Support</h3>
+                <p class="feature-description">
+                    Simply upload your PDF documents and let our system 
+                    extract content to create targeted quizzes.
+                </p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Performance Analytics</h3>
+                <p class="feature-description">
+                    Get detailed insights into quiz performance with 
+                    AI-generated feedback and improvement suggestions.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Quizzes Created</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">50K+</div>
+            <div class="stat-label">Questions Generated</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">5K+</div>
+            <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">99%</div>
+            <div class="stat-label">Satisfaction Rate</div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-brain me-2"></i>QuizGenix
+            </div>
+            <ul class="footer-links">
+                <li><a href="{% url 'landing' %}#home">Home</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 QuizGenix. All rights reserved. Powered by AI.</p>
+        </div>
+    </div>
+</footer>
+{% endblock %}

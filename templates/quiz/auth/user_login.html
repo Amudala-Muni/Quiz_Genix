@@ -1,0 +1,372 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}User Login - QuizGenix{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ===== LOGIN PAGE SPECIFIC STYLES ===== */
+    .login-container {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-header {
+        background: var(--gradient-main);
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .login-header h2 {
+        color: white;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+
+    .login-header p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.9rem;
+        position: relative;
+    }
+
+    .login-header i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    .login-body {
+        padding: 2rem;
+    }
+
+    .login-form .mb-3 {
+        margin-bottom: 1.25rem;
+    }
+
+    .login-form .form-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-form .form-label i {
+        color: var(--accent-purple);
+        font-size: 0.9rem;
+    }
+
+    .login-form .form-control {
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        background: rgba(15, 23, 42, 0.9);
+        border: 2px solid #475569;
+        border-radius: 12px;
+        color: #f8fafc;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15),
+                    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
+
+    .login-form .form-control:hover:not(:focus) {
+        border-color: #64748b;
+        background: rgba(30, 41, 59, 0.95);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(100, 116, 139, 0.2);
+    }
+
+    .login-form .form-control:focus {
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        background: rgba(15, 23, 42, 0.95);
+        border-color: #8b5cf6;
+        color: #f8fafc;
+        outline: none;
+        transform: translateY(-2px);
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.35),
+                    0 0 30px rgba(139, 92, 246, 0.25),
+                    0 8px 25px rgba(0, 0, 0, 0.3),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .login-form .form-control::placeholder {
+        color: #94a3b8;
+        font-weight: 400;
+        opacity: 1;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 1rem;
+        background: var(--gradient-main);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        margin-top: 0.5rem;
+    }
+
+    .btn-login::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: 0.5s;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-login:hover::before {
+        left: 100%;
+    }
+
+    .btn-login i {
+        margin-right: 0.5rem;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .divider span {
+        padding: 0 1rem;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
+
+    .register-link {
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .register-link a {
+        color: var(--accent-purple);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .register-link a:hover {
+        color: var(--accent-pink);
+        text-decoration: underline;
+    }
+
+    .back-home {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .back-home a {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .back-home a:hover {
+        color: var(--accent-purple);
+    }
+
+    .input-icon {
+        position: relative;
+        width: 100%;
+    }
+
+    .input-icon i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        z-index: 10;
+        pointer-events: none;
+        width: 20px;
+        text-align: center;
+    }
+
+    .input-icon .form-control {
+        padding-left: 2.75rem !important;
+        padding-right: 2.75rem;
+    }
+
+    .input-icon .form-control:focus + i,
+    .input-icon:focus-within i {
+        color: #8b5cf6;
+        text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    }
+
+    /* Password Toggle Button */
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 0.25rem;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .password-toggle:hover {
+        color: #8b5cf6;
+    }
+
+    .password-toggle:focus {
+        outline: none;
+        color: #8b5cf6;
+        box-shadow: none;
+    }
+
+    @media (max-width: 576px) {
+        .login-header {
+            padding: 1.5rem;
+        }
+
+        .login-body {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <!-- Header -->
+        <div class="login-header">
+            <i class="fas fa-user"></i>
+            <h2>Welcome Back</h2>
+            <p>Login to your account</p>
+        </div>
+
+        <!-- Body -->
+        <div class="login-body">
+            <form method="post" action="{% url 'user_login' %}" class="login-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <div class="input-icon">
+                        <input type="text" name="username" class="form-control" id="id_username" 
+                               placeholder="Enter your username" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-icon">
+                        <input type="password" name="password" class="form-control" id="id_password" 
+                               placeholder="Enter your password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <!-- Register Link -->
+            <div class="register-link">
+                Don't have an account? 
+                <a href="{% url 'register' %}">Register here</a>
+            </div>
+
+            <!-- Back to Home -->
+            <div class="back-home">
+                <a href="{% url 'landing' %}">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

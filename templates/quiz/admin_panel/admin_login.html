@@ -1,0 +1,413 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Admin Login - QuizGenix{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ===== ADMIN LOGIN PAGE SPECIFIC STYLES ===== */
+    /* Override CSS variables for Admin Login - Pink Theme */
+    .login-card {
+        --gradient-main: linear-gradient(135deg, #ff4ecd, #ff2d95);
+        --accent-purple: #ff4ecd;
+        --accent-pink: #ff2d95;
+    }
+
+    .login-container {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #ff4ecd, #ff2d95);
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .login-header h2 {
+        color: white;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+
+    .login-header p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.9rem;
+        position: relative;
+    }
+
+    .login-header i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    .login-body {
+        padding: 2rem;
+    }
+
+    .login-form .mb-3 {
+        margin-bottom: 1.25rem;
+    }
+
+    .login-form .form-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-form .form-label i {
+        color: var(--accent-pink);
+        font-size: 0.9rem;
+    }
+
+    .login-form .form-control {
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        background: rgba(15, 23, 42, 0.9);
+        border: 2px solid #475569;
+        border-radius: 12px;
+        color: #f8fafc;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15),
+                    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
+
+    .login-form .form-control:hover:not(:focus) {
+        border-color: #64748b;
+        background: rgba(30, 41, 59, 0.95);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(100, 116, 139, 0.2);
+    }
+
+    .login-form .form-control:focus {
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        background: rgba(15, 23, 42, 0.95);
+        border-color: var(--accent-pink);
+        color: #f8fafc;
+        outline: none;
+        transform: translateY(-2px);
+        box-shadow: 0 0 0 4px rgba(255, 78, 205, 0.35),
+                    0 0 30px rgba(255, 78, 205, 0.25),
+                    0 8px 25px rgba(0, 0, 0, 0.3),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .login-form .form-control::placeholder {
+        color: #94a3b8;
+        font-weight: 400;
+        opacity: 1;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 1rem;
+        /* Premium Pink Gradient Glassmorphism */
+        background: linear-gradient(135deg, 
+            rgba(255, 78, 205, 0.9), 
+            rgba(255, 45, 149, 0.85)
+        );
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Soft pink glow shadow */
+        box-shadow: 
+            0 4px 15px rgba(255, 46, 149, 0.3),
+            0 0 40px rgba(255, 78, 205, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        margin-top: 0.5rem;
+    }
+
+    /* Shine Reflection Effect */
+    .btn-login::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.4), 
+            transparent
+        );
+        transition: 0.6s;
+        z-index: 1;
+    }
+
+    /* Subtle inner glow layer */
+    .btn-login::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 12px;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.15) 0%,
+            transparent 50%,
+            transparent 100%
+        );
+        pointer-events: none;
+        transition: all 0.4s ease;
+    }
+
+    .btn-login:hover {
+        /* Slight lift on hover */
+        transform: translateY(-3px);
+        /* Enhanced soft pink glow shadow */
+        box-shadow: 
+            0 8px 30px rgba(255, 46, 149, 0.5),
+            0 0 50px rgba(255, 78, 205, 0.35),
+            0 0 80px rgba(255, 45, 149, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.35);
+        background: linear-gradient(135deg, 
+            rgba(255, 78, 205, 0.95), 
+            rgba(255, 45, 149, 0.9)
+        );
+    }
+
+    .btn-login:hover::before {
+        left: 100%;
+        transition: 0.5s;
+    }
+
+    /* Active state - press effect */
+    .btn-login:active {
+        transform: translateY(-1px);
+        box-shadow: 
+            0 4px 20px rgba(255, 46, 149, 0.4),
+            0 0 30px rgba(255, 78, 205, 0.25),
+            inset 0 2px 4px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-login i {
+        margin-right: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-login span {
+        position: relative;
+        z-index: 2;
+    }
+
+    .back-home {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .back-home a {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .back-home a:hover {
+        color: var(--accent-pink);
+    }
+
+    .input-icon {
+        position: relative;
+        width: 100%;
+    }
+
+    .input-icon i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        z-index: 10;
+        pointer-events: none;
+        width: 20px;
+        text-align: center;
+    }
+
+    .input-icon .form-control {
+        padding-left: 2.75rem !important;
+        padding-right: 2.75rem;
+    }
+
+    .input-icon .form-control:focus + i,
+    .input-icon:focus-within i {
+        color: var(--accent-pink);
+        text-shadow: 0 0 10px rgba(255, 78, 205, 0.5);
+    }
+
+    /* Password Toggle Button */
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 0.25rem;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .password-toggle:hover {
+        color: var(--accent-pink);
+    }
+
+    .password-toggle:focus {
+        outline: none;
+        color: var(--accent-pink);
+        box-shadow: none;
+    }
+
+    .admin-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0.75rem;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        font-size: 0.75rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 576px) {
+        .login-header {
+            padding: 1.5rem;
+        }
+
+        .login-body {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <!-- Header -->
+        <div class="login-header">
+            <i class="fas fa-user-shield"></i>
+            <span class="admin-badge">
+                <i class="fas fa-crown"></i> Admin Access
+            </span>
+            <h2>Admin Login</h2>
+            <p>Restricted access area</p>
+        </div>
+
+        <!-- Body -->
+        <div class="login-body">
+            <form method="post" action="{% url 'admin_login' %}" class="login-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">
+                        <i class="fas fa-user-shield"></i> Admin Username
+                    </label>
+                    <div class="input-icon">
+                        <input type="text" name="username" class="form-control" id="id_username" 
+                               placeholder="Enter admin username" required>
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-icon">
+                        <input type="password" name="password" class="form-control" id="id_password" 
+                               placeholder="Enter admin password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> <span>Admin Login</span>
+                </button>
+            </form>
+
+            <!-- Back to Home -->
+            <div class="back-home">
+                <a href="{% url 'landing' %}">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

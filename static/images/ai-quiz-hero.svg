@@ -1,0 +1,276 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a0a2e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d1b4e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f1a3d;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c084fc;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="glowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+    </linearGradient>
+    
+    <linearGradient id="brainGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e879f9;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.3" />
+    </linearGradient>
+    
+    <linearGradient id="laptopScreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#312e81;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="dataLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:0" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+    </linearGradient>
+    
+    <!-- Filters -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1600" height="900" fill="url(#bgGradient)"/>
+  
+  <!-- Background decorative circles -->
+  <circle cx="200" cy="150" r="300" fill="#7c3aed" opacity="0.1"/>
+  <circle cx="1400" cy="750" r="400" fill="#3b82f6" opacity="0.1"/>
+  <circle cx="800" cy="450" r="500" fill="#a855f7" opacity="0.05"/>
+  
+  <!-- Data Flow Lines - Animated -->
+  <g opacity="0.6">
+    <!-- Left flow -->
+    <path d="M 800 280 Q 750 350 700 450" stroke="url(#dataLine)" stroke-width="3" fill="none" filter="url(#glow)">
+      <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 800 300 Q 740 380 680 480" stroke="url(#dataLine)" stroke-width="2" fill="none" opacity="0.7">
+      <animate attributeName="stroke-dasharray" values="0,80;80,0" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Right flow -->
+    <path d="M 800 280 Q 850 350 900 450" stroke="url(#dataLine)" stroke-width="3" fill="none" filter="url(#glow)">
+      <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    </path>
+    <path d="M 800 300 Q 860 380 920 480" stroke="url(#dataLine)" stroke-width="2" fill="none" opacity="0.7">
+      <animate attributeName="stroke-dasharray" values="0,80;80,0" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+    </path>
+    
+    <!-- Center flow down -->
+    <path d="M 800 350 L 800 450" stroke="url(#dataLine)" stroke-width="4" fill="none" filter="url(#glow)">
+      <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Floating data particles -->
+  <g filter="url(#glow)">
+    <circle cx="750" cy="350" r="4" fill="#a855f7">
+      <animate attributeName="cy" values="350;450;350" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.3;1" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="850" cy="380" r="3" fill="#3b82f6">
+      <animate attributeName="cy" values="380;480;380" dur="2.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="780" cy="400" r="2" fill="#c084fc">
+      <animate attributeName="cy" values="400;500;400" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- AI Brain Hologram -->
+  <g transform="translate(800, 200)" filter="url(#softGlow)">
+    <!-- Brain outer glow -->
+    <ellipse cx="0" cy="0" rx="120" ry="100" fill="url(#brainGlow)" opacity="0.3"/>
+    
+    <!-- Brain shape -->
+    <g transform="translate(0, 10)">
+      <!-- Left hemisphere -->
+      <path d="M -60 -30 Q -90 -50 -80 -80 Q -70 -110 -40 -100 Q -20 -90 -30 -60 Q -40 -30 -60 -30" 
+            fill="url(#purpleGradient)" opacity="0.9"/>
+      <!-- Right hemisphere -->
+      <path d="M 60 -30 Q 90 -50 80 -80 Q 70 -110 40 -100 Q 20 -90 30 -60 Q 40 -30 60 -30" 
+            fill="url(#blueGradient)" opacity="0.9"/>
+      <!-- Center connection -->
+      <ellipse cx="0" cy="-50" rx="30" ry="35" fill="url(#purpleGradient)" opacity="0.8"/>
+      
+      <!-- Neural network nodes -->
+      <circle cx="-50" cy="-70" r="8" fill="#e879f9" filter="url(#glow)"/>
+      <circle cx="50" cy="-70" r="8" fill="#e879f9" filter="url(#glow)"/>
+      <circle cx="-30" cy="-95" r="6" fill="#a855f7" filter="url(#glow)"/>
+      <circle cx="30" cy="-95" r="6" fill="#a855f7" filter="url(#glow)"/>
+      <circle cx="0" cy="-85" r="10" fill="#f0abfc" filter="url(#glow)"/>
+      <circle cx="-60" cy="-40" r="5" fill="#6366f1" filter="url(#glow)"/>
+      <circle cx="60" cy="-40" r="5" fill="#6366f1" filter="url(#glow)"/>
+      <circle cx="0" cy="-30" r="7" fill="#c084fc" filter="url(#glow)"/>
+      
+      <!-- Neural connections -->
+      <line x1="-50" y1="-70" x2="0" y2="-85" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+      <line x1="50" y1="-70" x2="0" y2="-85" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+      <line x1="-30" y1="-95" x2="0" y2="-85" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+      <line x1="30" y1="-95" x2="0" y2="-85" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+      <line x1="0" y1="-85" x2="0" y2="-30" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+    </g>
+    
+    <!-- Hologram ring -->
+    <ellipse cx="0" cy="60" rx="80" ry="15" fill="none" stroke="url(#purpleGradient)" stroke-width="2" opacity="0.5">
+      <animate attributeName="rx" values="80;90;80" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="0" cy="60" rx="60" ry="10" fill="none" stroke="url(#blueGradient)" stroke-width="1" opacity="0.4">
+      <animate attributeName="rx" values="60;70;60" dur="2.5s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+  
+  <!-- Laptop -->
+  <g transform="translate(800, 650)">
+    <!-- Laptop base shadow -->
+    <ellipse cx="0" cy="80" rx="280" ry="30" fill="#0f172a" opacity="0.5"/>
+    
+    <!-- Laptop base -->
+    <path d="M -300 60 L 300 60 L 280 80 L -280 80 Z" fill="#1e293b"/>
+    <path d="M -300 60 L 300 60 L 300 65 L -300 65 Z" fill="#334155"/>
+    
+    <!-- Laptop screen border -->
+    <rect x="-280" y="-160" width="560" height="220" rx="15" fill="#1e293b"/>
+    
+    <!-- Laptop screen -->
+    <rect x="-265" y="-145" width="530" height="190" rx="10" fill="url(#laptopScreen)"/>
+    
+    <!-- Screen content - Quiz Questions -->
+    <g transform="translate(-240, -130)">
+      <!-- Header bar -->
+      <rect x="0" y="0" width="490" height="25" rx="5" fill="#3730a3" opacity="0.5"/>
+      <circle cx="15" cy="12.5" r="5" fill="#ef4444" opacity="0.8"/>
+      <circle cx="35" cy="12.5" r="5" fill="#f59e0b" opacity="0.8"/>
+      <circle cx="55" cy="12.5" r="5" fill="#22c55e" opacity="0.8"/>
+      <text x="470" y="17" fill="#a5b4fc" font-size="10" text-anchor="end" font-family="Arial">AI Quiz</text>
+      
+      <!-- Question 1 -->
+      <rect x="10" y="40" width="470" height="30" rx="5" fill="#4c1d95" opacity="0.3"/>
+      <text x="20" y="60" fill="#e9d5ff" font-size="11" font-family="Arial">1. What is the primary function of neural networks?</text>
+      
+      <!-- Options -->
+      <rect x="20" y="80" width="200" height="20" rx="4" fill="#5b21b6" opacity="0.4"/>
+      <text x="30" y="94" fill="#ddd6fe" font-size="9" font-family="Arial">A) Data storage</text>
+      
+      <rect x="230" y="80" width="200" height="20" rx="4" fill="#7c3aed" opacity="0.5"/>
+      <text x="240" y="94" fill="#f5d0fe" font-size="9" font-family="Arial">B) Pattern recognition</text>
+      
+      <rect x="20" y="108" width="200" height="20" rx="4" fill="#5b21b6" opacity="0.4"/>
+      <text x="30" y="122" fill="#ddd6fe" font-size="9" font-family="Arial">C) Network routing</text>
+      
+      <rect x="230" y="108" width="200" height="20" rx="4" fill="#5b21b6" opacity="0.4"/>
+      <text x="240" y="122" fill="#ddd6fe" font-size="9" font-family="Arial">D) File compression</text>
+      
+      <!-- Question 2 -->
+      <rect x="10" y="140" width="470" height="30" rx="5" fill="#4c1d95" opacity="0.3"/>
+      <text x="20" y="160" fill="#e9d5ff" font-size="11" font-family="Arial">2. Which algorithm is used for classification?</text>
+      
+      <!-- Options -->
+      <rect x="20" y="180" width="200" height="20" rx="4" fill="#5b21b6" opacity="0.4"/>
+      <text x="30" y="194" fill="#ddd6fe" font-size="9" font-family="Arial">A) K-Means</text>
+      
+      <rect x="230" y="180" width="200" height="20" rx="4" fill="#5b21b6" opacity="0.4"/>
+      <text x="240" y="194" fill="#ddd6fe" font-size="9" font-family="Arial">B) Linear Regression</text>
+    </g>
+    
+    <!-- Laptop camera -->
+    <circle cx="0" cy="-155" r="4" fill="#334155"/>
+    <circle cx="0" cy="-155" r="2" fill="#1e293b"/>
+    
+    <!-- Screen glow -->
+    <rect x="-265" y="-145" width="530" height="190" rx="10" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.3"/>
+  </g>
+  
+  <!-- Student silhouette -->
+  <g transform="translate(800, 900)">
+    <!-- Chair -->
+    <rect x="-60" y="-180" width="120" height="150" rx="10" fill="#1e293b"/>
+    <rect x="-50" y="-180" width="100" height="10" rx="3" fill="#334155"/>
+    
+    <!-- Body -->
+    <ellipse cx="0" cy="-250" rx="50" ry="70" fill="#1e293b"/>
+    
+    <!-- Head -->
+    <circle cx="0" cy="-340" r="45" fill="#1e293b"/>
+    
+    <!-- Hair -->
+    <path d="M -40 -360 Q 0 -400 40 -360 Q 45 -340 35 -320 Q 0 -330 -35 -320 Q -45 -340 -40 -360" 
+          fill="#1e293b"/>
+    
+    <!-- Face details - minimalist -->
+    <ellipse cx="-12" cy="-345" rx="5" ry="3" fill="#334155"/>
+    <ellipse cx="12" cy="-345" rx="5" ry="3" fill="#334155"/>
+    <path d="M -8 -330 Q 0 -325 8 -330" stroke="#334155" stroke-width="2" fill="none"/>
+    
+    <!-- Arms typing -->
+    <path d="M -50 -260 Q -80 -240 -100 -220" stroke="#1e293b" stroke-width="25" fill="none" stroke-linecap="round"/>
+    <path d="M 50 -260 Q 80 -240 100 -220" stroke="#1e293b" stroke-width="25" fill="none" stroke-linecap="round"/>
+    
+    <!-- Hands -->
+    <ellipse cx="-110" cy="-215" rx="15" ry="12" fill="#374151"/>
+    <ellipse cx="110" cy="-215" rx="15" ry="12" fill="#374151"/>
+  </g>
+  
+  <!-- Additional floating elements -->
+  <g opacity="0.4">
+    <!-- Small floating orbs -->
+    <circle cx="300" cy="300" r="5" fill="#a855f7">
+      <animate attributeName="cy" values="300;280;300" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1300" cy="400" r="4" fill="#3b82f6">
+      <animate attributeName="cy" values="400;380;400" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="700" r="3" fill="#c084fc">
+      <animate attributeName="cy" values="700;680;700" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1200" cy="200" r="4" fill="#6366f1">
+      <animate attributeName="cy" values="200;180;200" dur="4.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Decorative circuit lines -->
+  <g stroke="#a855f7" stroke-width="1" opacity="0.2">
+    <path d="M 100 500 L 150 500 L 180 520 L 250 520" fill="none"/>
+    <path d="M 1500 400 L 1450 400 L 1420 420 L 1350 420" fill="none"/>
+    <path d="M 200 600 L 250 600 L 280 580 L 350 580" fill="none"/>
+    <path d="M 1400 550 L 1350 550 L 1320 570 L 1250 570" fill="none"/>
+  </g>
+  
+  <!-- Corner accents -->
+  <g stroke="#a855f7" stroke-width="2" opacity="0.3" fill="none">
+    <path d="M 50 50 L 100 50 M 50 50 L 50 100"/>
+    <path d="M 1550 50 L 1500 50 M 1550 50 L 1550 100"/>
+    <path d="M 50 850 L 100 850 M 50 850 L 50 800"/>
+    <path d="M 1550 850 L 1500 850 M 1550 850 L 1550 800"/>
+  </g>
+</svg>

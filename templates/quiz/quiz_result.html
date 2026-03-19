@@ -1,0 +1,760 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Quiz Result - Quiz Generator{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Quiz Result Page - Modern SaaS Design */
+    .result-page-wrapper {
+        background-color: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding: 40px 24px;
+    }
+
+    /* Main Result Card */
+    .result-main-card {
+        background: #ffffff;
+        border: 1px solid #e6e9f2;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(102, 126, 234, 0.08);
+        padding: 32px;
+        margin-bottom: 24px;
+    }
+
+    .result-header {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .result-header h2 {
+        color: #1a1f36;
+        font-weight: 700;
+        font-size: 1.75rem;
+        margin-bottom: 8px;
+    }
+
+    .result-header .quiz-title {
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+
+    /* Score Circle with Glow Effect */
+    .score-circle-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 32px;
+        position: relative;
+    }
+
+    .score-circle {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-weight: 700;
+        position: relative;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.35);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .score-circle:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 40px rgba(102, 126, 234, 0.45);
+    }
+
+    .score-circle::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        z-index: -1;
+        opacity: 0.3;
+        filter: blur(12px);
+    }
+
+    .score-circle .percentage {
+        font-size: 3rem;
+        line-height: 1;
+        font-weight: 700;
+    }
+
+    .score-circle .label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-top: 4px;
+        font-weight: 500;
+    }
+
+    /* Performance Message */
+    .performance-message {
+        text-align: center;
+        padding: 16px 24px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 12px;
+        margin-bottom: 32px;
+    }
+
+    .performance-message p {
+        color: #475569;
+        font-size: 1.05rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .performance-message .emoji {
+        margin-right: 8px;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid #e6e9f2;
+        border-radius: 14px;
+        padding: 24px 16px;
+        text-align: center;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-card .stat-number {
+        font-size: 2.25rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 8px;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .stat-card.stat-total .stat-number {
+        color: #374151;
+    }
+
+    .stat-card.stat-correct .stat-number {
+        color: #059669;
+    }
+
+    .stat-card.stat-wrong .stat-number {
+        color: #dc2626;
+    }
+
+    .stat-card .icon-wrapper {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+    }
+
+    .stat-card.stat-total .icon-wrapper {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    .stat-card.stat-correct .icon-wrapper {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    .stat-card.stat-wrong .icon-wrapper {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    /* Soft Divider */
+    .soft-divider {
+        height: 1px;
+        background: #e9ecf5;
+        margin: 24px 0;
+    }
+
+    /* AI Analysis Section */
+    .ai-analysis-section {
+        background: #ffffff;
+        border: 1px solid #e6e9f2;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(102, 126, 234, 0.08);
+        padding: 32px;
+        margin-bottom: 24px;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .section-header h3 {
+        color: #1a1f36;
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin: 0;
+    }
+
+    .section-header .icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+    }
+
+    /* Analysis Cards */
+    .analysis-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .analysis-card {
+        border: 1px solid #e6e9f2;
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .analysis-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .analysis-card.strengths {
+        border-top: 3px solid #059669;
+    }
+
+    .analysis-card.weaknesses {
+        border-top: 3px solid #f59e0b;
+    }
+
+    .analysis-card.suggestions {
+        border-top: 3px solid #667eea;
+    }
+
+    .analysis-card .card-header-custom {
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .analysis-card.strengths .card-header-custom {
+        background: #f0fdf4;
+    }
+
+    .analysis-card.weaknesses .card-header-custom {
+        background: #fffbeb;
+    }
+
+    .analysis-card.suggestions .card-header-custom {
+        background: #eff6ff;
+    }
+
+    .analysis-card .card-header-custom h4 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0;
+        color: #1f2937;
+    }
+
+    .analysis-card.strengths .card-header-custom h4 {
+        color: #059669;
+    }
+
+    .analysis-card.weaknesses .card-header-custom h4 {
+        color: #d97706;
+    }
+
+    .analysis-card.suggestions .card-header-custom h4 {
+        color: #4f46e5;
+    }
+
+    .analysis-card .card-body-custom {
+        padding: 18px;
+        background: #ffffff;
+    }
+
+    .analysis-card .card-body-custom p {
+        color: #4b5563;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Detailed Question Analysis */
+    .question-analysis-section {
+        background: #ffffff;
+        border: 1px solid #e6e9f2;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(102, 126, 234, 0.08);
+        padding: 32px;
+        margin-bottom: 24px;
+    }
+
+    .question-item {
+        padding: 20px;
+        border: 1px solid #e6e9f2;
+        border-radius: 14px;
+        margin-bottom: 16px;
+        transition: box-shadow 0.25s ease;
+    }
+
+    .question-item:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .question-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .question-item.correct {
+        border-left: 4px solid #059669;
+    }
+
+    .question-item.incorrect {
+        border-left: 4px solid #dc2626;
+    }
+
+    .question-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .question-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    .status-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-badge.correct {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    .status-badge.incorrect {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .question-text {
+        color: #1f2937;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+
+    .answers-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .answer-card {
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid #e6e9f2;
+    }
+
+    .answer-card.your-answer {
+        background: #f8fafc;
+    }
+
+    .answer-card.correct-answer {
+        background: #f0fdf4;
+        border-color: #a7f3d0;
+    }
+
+    .answer-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+    }
+
+    .answer-card.your-answer .answer-label {
+        color: #6b7280;
+    }
+
+    .answer-card.correct-answer .answer-label {
+        color: #059669;
+    }
+
+    .answer-text {
+        color: #374151;
+        font-size: 0.9rem;
+    }
+
+    .your-answer.wrong {
+        border-color: #fecaca;
+        background: #fef2f2;
+    }
+
+    .explanation-box {
+        margin-top: 16px;
+        padding: 16px;
+        background: #eff6ff;
+        border-radius: 10px;
+        border: 1px solid #bfdbfe;
+    }
+
+    .explanation-box .explanation-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #3b82f6;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .explanation-box p {
+        color: #4b5563;
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .action-btn {
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.25s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-btn.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+    }
+
+    .action-btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(102, 126, 234, 0.35);
+        color: #ffffff;
+    }
+
+    .action-btn.secondary {
+        background: #ffffff;
+        color: #4b5563;
+        border: 1px solid #e6e9f2;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .action-btn.secondary:hover {
+        background: #f9fafb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        color: #374151;
+    }
+
+    .action-btn.info {
+        background: #ffffff;
+        color: #0891b2;
+        border: 1px solid #e6e9f2;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .action-btn.info:hover {
+        background: #f0fdfa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        color: #0e7490;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 991px) {
+        .analysis-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-container {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 767px) {
+        .result-page-wrapper {
+            padding: 24px 16px;
+        }
+
+        .result-main-card,
+        .ai-analysis-section,
+        .question-analysis-section {
+            padding: 24px 20px;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+        }
+
+        .score-circle .percentage {
+            font-size: 2.5rem;
+        }
+
+        .stats-container {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .stat-card {
+            padding: 20px 16px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 2rem;
+        }
+
+        .answers-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-page-wrapper">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Main Result Card -->
+                <div class="result-main-card">
+                    <div class="result-header">
+                        <h2><i class="fas fa-trophy" style="color: #f59e0b;"></i> Quiz Completed!</h2>
+                        <p class="quiz-title">{{ quiz.subject }}</p>
+                    </div>
+
+                    <!-- Score Circle -->
+                    <div class="score-circle-container">
+                        <div class="score-circle">
+                            <span class="percentage">{{ percentage }}%</span>
+                            <span class="label">Score</span>
+                        </div>
+                    </div>
+
+                    <!-- Performance Message -->
+                    <div class="performance-message">
+                        <p>
+                            {% if percentage >= 90 %}
+                                <span class="emoji">🎉</span>Outstanding performance! You nailed it!
+                            {% elif percentage >= 70 %}
+                                <span class="emoji">👍</span>Great job! Well done!
+                            {% elif percentage >= 50 %}
+                                <span class="emoji">💪</span>Good effort! Keep practicing!
+                            {% else %}
+                                <span class="emoji">📚</span>Keep practicing! You'll improve!
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-container">
+                        <div class="stat-card stat-total">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-list-ul"></i>
+                            </div>
+                            <div class="stat-number">{{ score }}</div>
+                            <div class="stat-label">Total Questions</div>
+                        </div>
+                        <div class="stat-card stat-correct">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="stat-number">{{ correct }}</div>
+                            <div class="stat-label">Correct Answers</div>
+                        </div>
+                        <div class="stat-card stat-wrong">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="stat-number">{{ wrong }}</div>
+                            <div class="stat-label">Wrong Answers</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Feedback Section -->
+                {% if result %}
+                <div class="ai-analysis-section">
+                    <div class="section-header">
+                        <div class="icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI Performance Analysis</h3>
+                    </div>
+
+                    <div class="analysis-grid">
+                        <!-- Strength Analysis -->
+                        <div class="analysis-card strengths">
+                            <div class="card-header-custom">
+                                <i class="fas fa-thumbs-up" style="color: #28a745; font-weight: 600;"></i>
+                                <h4>Strengths</h4>
+                            </div>
+                            <div class="card-body-custom">
+                                <p>{{ result.strength_analysis|linebreaks }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Weakness Analysis -->
+                        <div class="analysis-card weaknesses">
+                            <div class="card-header-custom">
+                                <i class="fas fa-thumbs-down" style="color: #dc3545; font-weight: 600;"></i>
+                                <h4>Weaknesses</h4>
+                            </div>
+                            <div class="card-body-custom">
+                                <p>{{ result.weakness_analysis|linebreaks }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Suggestions -->
+                        <div class="analysis-card suggestions">
+                            <div class="card-header-custom">
+                                <i class="fas fa-lightbulb" style="color: #007bff; font-weight: 600;"></i>
+                                <h4>Suggestions</h4>
+                            </div>
+                            <div class="card-body-custom">
+                                <p>{{ result.suggestions|linebreaks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Detailed Question Analysis Section -->
+                <div class="question-analysis-section">
+                    <div class="section-header">
+                        <div class="icon">
+                            <i class="fas fa-list-alt"></i>
+                        </div>
+                        <h3>Detailed Question Analysis</h3>
+                    </div>
+
+                    {% for detail in detailed_results %}
+                    <div class="question-item {% if detail.is_correct %}correct{% else %}incorrect{% endif %}">
+                        <div class="question-header">
+                            <span class="question-badge">Question {{ detail.question_number }}</span>
+                            {% if detail.is_correct %}
+                                <span class="status-badge correct">
+                                    <i class="fas fa-check-circle"></i> Correct
+                                </span>
+                            {% else %}
+                                <span class="status-badge incorrect">
+                                    <i class="fas fa-times-circle"></i> Incorrect
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="question-text">
+                            {{ detail.question_text }}
+                        </div>
+
+                        <div class="answers-grid">
+                            <div class="answer-card your-answer {% if not detail.is_correct and detail.selected_answer %}wrong{% endif %}">
+                                <div class="answer-label">Your Answer</div>
+                                <div class="answer-text">
+                                    {% if detail.selected_answer %}
+                                        <strong>{{ detail.selected_answer }}</strong> - {{ detail.selected_text }}
+                                    {% else %}
+                                        <span class="text-muted">No answer selected</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="answer-card correct-answer">
+                                <div class="answer-label">Correct Answer</div>
+                                <div class="answer-text">
+                                    <strong>{{ detail.correct_answer }}</strong> - {{ detail.correct_text }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if detail.explanation %}
+                        <div class="explanation-box">
+                            <div class="explanation-label">
+                                <i class="fas fa-lightbulb"></i> Explanation
+                            </div>
+                            <p>{{ detail.explanation|linebreaks }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="{% url 'take_quiz' quiz.id %}" class="action-btn primary">
+                        <i class="fas fa-redo"></i> Retake Quiz
+                    </a>
+                    <a href="{% url 'quiz_detail' quiz.id %}" class="action-btn info">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="action-btn secondary">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

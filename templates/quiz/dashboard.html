@@ -1,0 +1,457 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Dashboard - Quiz Generator{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ===== SOFT GRADIENT BACKGROUND FOR TOP SECTION ===== */
+    .quiz-create-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem; /* Adjusted spacing between top card and lower cards */
+        border: 1px solid #e2e8f0;
+    }
+    
+    /* ===== ADD MARGIN TO ROWS FOR CONSISTENT SPACING ===== */
+    .dashboard-cards-row {
+        margin-top: 1.5rem; /* 24px - spacing between sections */
+    }
+    
+    .dashboard-cards-row:first-of-type {
+        margin-top: 0;
+    }
+    
+    /* ===== CARD ENHANCEMENTS ===== */
+    .quiz-create-section .card {
+        border-radius: 12px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid #e2e8f0 !important;
+        overflow: hidden;
+    }
+    
+    .quiz-create-section .card-body {
+        padding: 1.5rem 1.25rem !important;
+    }
+    
+    /* ===== EQUAL HEIGHT INPUTS & BUTTON ===== */
+    .quiz-create-section .form-control,
+    .quiz-create-section .form-select,
+    .quiz-create-section .btn-generate {
+        height: 48px;
+        border-radius: 10px;
+    }
+    
+    /* ===== LABEL STYLING ===== */
+    .quiz-create-section .form-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #475569;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.01em;
+    }
+    
+    /* ===== INPUT BASE STYLING ===== */
+    .quiz-create-section .form-control,
+    .quiz-create-section .form-select {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        color: #1e293b;
+        font-size: 0.95rem;
+        transition: all 0.25s ease;
+    }
+    
+    .quiz-create-section .form-control:focus,
+    .quiz-create-section .form-select:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        background: #ffffff;
+    }
+    
+    .quiz-create-section .form-control::placeholder {
+        color: #94a3b8;
+    }
+    
+    /* ===== BUTTON STYLING WITH GRADIENT & HOVER ===== */
+    .quiz-create-section .btn-generate {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #ffffff;
+        box-shadow: 0 2px 12px rgba(102, 126, 234, 0.35);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .quiz-create-section .btn-generate:hover {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+        color: #ffffff;
+    }
+    
+    .quiz-create-section .btn-generate:active {
+        transform: translateY(0);
+    }
+    
+    /* ===== TOPIC INPUT WITH ICON ===== */
+    .topic-icon-wrapper {
+        position: relative;
+    }
+    
+    .topic-icon-wrapper .form-control {
+        padding-left: 2.75rem;
+    }
+    
+    .topic-icon-wrapper .topic-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 0.9rem;
+        z-index: 3;
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 991px) {
+        .quiz-create-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .dashboard-cards-row {
+            margin-top: 1.25rem; /* 20px on medium screens */
+        }
+        
+        .quiz-create-section .form-control,
+        .quiz-create-section .form-select,
+        .quiz-create-section .btn-generate {
+            height: 46px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .quiz-create-section {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.25rem;
+        }
+        
+        .dashboard-cards-row {
+            margin-top: 1rem; /* 16px on small screens */
+        }
+        
+        .quiz-create-section .card-body {
+            padding: 1.25rem 1rem !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Topic-based Quiz Creation - Hidden for Admin Users -->
+{% if not user.is_staff and not user.is_superuser %}
+<div class="quiz-create-section">
+    <div class="container-fluid px-0">
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0">
+                    <div class="card-header quiz-card-header">
+                        <h5 class="mb-0"><i class="fas fa-magic me-2"></i> Create New Quiz</h5>
+                    </div>
+                    <div class="card-body py-4">
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs mb-4" id="quizTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="topic-tab" data-bs-toggle="tab" data-bs-target="#topic" type="button" role="tab">
+                                    <i class="fas fa-lightbulb me-2"></i>Create from Topic
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pdf-tab" data-bs-toggle="tab" data-bs-target="#pdf" type="button" role="tab">
+                                    <i class="fas fa-file-pdf me-2"></i>Create from PDF
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="quizTabsContent">
+                            <!-- Topic-based Quiz -->
+                            <div class="tab-pane fade show active" id="topic" role="tabpanel">
+                                <form method="post" action="{% url 'create_quiz_topic' %}">
+                                    {% csrf_token %}
+                                    <div class="container-fluid px-0">
+                                        <div class="row g-3 align-items-end">
+                                            <!-- Enter Topic Field -->
+                                            <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                                <label for="topic" class="form-label mb-2">
+                                                    <i class="fas fa-book me-1"></i>Enter Topic
+                                                </label>
+                                                <div class="topic-icon-wrapper">
+                                                    <i class="fas fa-lightbulb topic-icon"></i>
+                                                    <input type="text" name="topic" class="form-control" id="topic" 
+                                                           placeholder="e.g., Python Programming" required>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Difficulty Field -->
+                                            <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                                <label for="difficulty" class="form-label mb-2">
+                                                    <i class="fas fa-signal me-1"></i>Difficulty
+                                                </label>
+                                                <select name="difficulty" class="form-select" id="difficulty" required>
+                                                    <option value="" selected disabled>Select Level</option>
+                                                    <option value="Easy">Easy</option>
+                                                    <option value="Medium">Medium</option>
+                                                    <option value="Hard">Hard</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <!-- Number of Questions Field -->
+                                            <div class="col-12 col-md-2 mb-3 mb-md-0">
+                                                <label for="num_questions" class="form-label mb-2">
+                                                    <i class="fas fa-list-ol me-1"></i>Questions
+                                                </label>
+                                                <input type="number" name="num_questions" class="form-control" id="num_questions" 
+                                                       min="1" max="50" value="10" required>
+                                            </div>
+                                            
+                                            <!-- Generate Button -->
+                                            <div class="col-12 col-md-2">
+                                                <button type="submit" class="btn btn-generate w-100">
+                                                    <i class="fas fa-robot me-2"></i>Generate
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                    
+                    <!-- PDF-based Quiz -->
+                    <div class="tab-pane fade" id="pdf" role="tabpanel">
+                        {% if pdfs %}
+                            <form id="pdfQuizForm" method="get">
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label for="pdfSelect" class="form-label">Select PDF</label>
+                                        <select name="pdf_id" class="form-select" id="pdfSelect" required>
+                                            <option value="">Choose a PDF...</option>
+                                            {% for pdf in pdfs %}
+                                                <option value="{{ pdf.id }}">{{ pdf.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-arrow-right"></i> Continue
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <script>
+                                document.getElementById('pdfQuizForm').addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    var pdfId = document.getElementById('pdfSelect').value;
+                                    if (pdfId) {
+                                        window.location.href = '/quiz/create/' + pdfId + '/';
+                                    }
+                                });
+                            </script>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No PDFs uploaded yet. Upload a PDF first to create quiz from it.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Upload PDF & My PDFs Section - Hidden for Admin Users -->
+{% if not user.is_staff and not user.is_superuser %}
+<div class="row dashboard-cards-row">
+    <!-- Upload PDF Section -->
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header quiz-card-header">
+                <h5 class="mb-0"><i class="fas fa-upload me-2"></i> Upload PDF</h5>
+            </div>
+            <div class="card-body bg-white">
+                <form method="post" action="{% url 'upload_pdf' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="pdf_title" class="form-label">
+                            <i class="fas fa-file-alt me-1"></i>PDF Title (Optional)
+                        </label>
+                        <input type="text" name="title" class="form-control" id="pdf_title" placeholder="Enter PDF title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pdf_file" class="form-label">
+                            <i class="fas fa-file-pdf me-1"></i>Select PDF File
+                        </label>
+                        <input type="file" name="pdf_file" class="form-control" id="pdf_file" accept=".pdf" required>
+                    </div>
+                    <button type="submit" class="btn btn-generate w-100 text-white">
+                        <i class="fas fa-cloud-upload-alt me-2"></i>Upload
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- My PDFs Section -->
+    <div class="col-lg-8 mb-4">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header quiz-card-header">
+                <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i> My PDFs</h5>
+            </div>
+            <div class="card-body bg-white">
+                {% if pdfs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pdf in pdfs %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-file-pdf text-danger"></i>
+                                        {{ pdf.title }}
+                                    </td>
+                                    <td>{{ pdf.uploaded_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'create_quiz' pdf.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-plus"></i> Generate Quiz
+                                        </a>
+                                        <a href="{% url 'delete_pdf' pdf.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center py-4">
+                        <i class="fas fa-inbox fa-3x"></i><br>
+                        No PDFs uploaded yet
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- My Quizzes Section -->
+<div class="row dashboard-cards-row">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header quiz-card-header">
+                <h5 class="mb-0"><i class="fas fa-list-ol me-2"></i> My Quizzes</h5>
+            </div>
+            <div class="card-body bg-white">
+                {% if quizzes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Difficulty</th>
+                                    <th>Questions</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for quiz in quizzes %}
+                                <tr>
+                                    <td>{{ quiz.subject }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if quiz.difficulty == 'Easy' %}success{% elif quiz.difficulty == 'Medium' %}warning{% else %}danger{% endif %}">
+                                            {{ quiz.difficulty }}
+                                        </span>
+                                    </td>
+                                    <td>{{ quiz.questions.count }}</td>
+                                    <td>{{ quiz.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-play"></i> Take Quiz
+                                        </a>
+                                        <a href="{% url 'quiz_detail' quiz.id %}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <a href="{% url 'delete_quiz' quiz.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center py-4">
+                        <i class="fas fa-clipboard-list fa-3x"></i><br>
+                        No quizzes generated yet
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Results Section -->
+{% if results %}
+<div class="row dashboard-cards-row">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header quiz-card-header bg-info">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i> Recent Results</h5>
+            </div>
+            <div class="card-body bg-white">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Completed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.quiz.subject }}</td>
+                                <td>{{ result.correct_answers }} / {{ result.total_questions }}</td>
+                                <td>
+                                    <span class="badge bg-{% if result.percentage >= 70 %}success{% elif result.percentage >= 50 %}warning{% else %}danger{% endif %}">
+                                        {{ result.percentage }}%
+                                    </span>
+                                </td>
+                                <td>{{ result.completed_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'quiz_detail' result.quiz.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

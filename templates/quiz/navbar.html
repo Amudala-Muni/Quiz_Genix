@@ -1,0 +1,86 @@
+{% load static %}
+<nav class="quiz-navbar navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <!-- Left: Logo -->
+        <a class="navbar-brand" href="{% url 'landing' %}">
+            <i class="fas fa-brain"></i>
+            QuizGenix
+        </a>
+
+        <!-- Mobile Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Center: Navigation Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'landing' %}" data-nav-link>
+                        <i class="fas fa-home me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'landing' %}#features" data-nav-link>
+                        <i class="fas fa-star me-1"></i> Features
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}" data-nav-link>
+                        <i class="fas fa-info-circle me-1"></i> About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact' %}" data-nav-link>
+                        <i class="fas fa-envelope me-1"></i> Contact
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right: Conditional Login/Logout -->
+            {% if user.is_authenticated %}
+            <div class="d-flex gap-2 align-items-center">
+                {% if user.is_staff %}
+                <span class="text-light me-3">
+                    <i class="fas fa-user-shield me-1"></i>Welcome, <strong>Admin {{ user.username }}</strong>
+                </span>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-gradient">
+                    <i class="fas fa-cogs me-1"></i>Admin Panel
+                </a>
+                <a href="{% url 'admin_logout' %}" class="btn btn-gradient btn-gradient-secondary">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+                {% else %}
+                {% with profile=user.profile|default:None %}
+                <div class="profile-img-container">
+                    {% if profile and profile.has_custom_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="Profile" class="profile-img-navbar">
+                    {% else %}
+                    <img src="{% static 'images/default-avatar.svg' %}" alt="Default Avatar" class="profile-img-navbar">
+                    {% endif %}
+                </div>
+                <span class="text-light me-3">
+                    Welcome, <strong>{{ user.username }}</strong>
+                </span>
+                {% endwith %}
+                <a href="{% url 'dashboard' %}" class="btn btn-gradient">
+                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                </a>
+                <a href="{% url 'logout' %}" class="btn btn-gradient btn-gradient-secondary">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="d-flex gap-2">
+                <a href="{% url 'login' %}" class="btn btn-gradient">
+                    <i class="fas fa-user me-1"></i>User Login
+                </a>
+                <a href="{% url 'admin_login' %}" class="btn btn-gradient btn-gradient-secondary btn-admin-login">
+                    <i class="fas fa-user-shield me-1"></i>Admin Login
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>

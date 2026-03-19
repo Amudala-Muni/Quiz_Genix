@@ -1,0 +1,8 @@
+Django>=4.2,<5.0
+djangorestframework>=3.14.0
+langchain==0.1.20
+langchain-google-genai
+google-generativeai
+PyPDF2
+python-dotenv
+Pillow

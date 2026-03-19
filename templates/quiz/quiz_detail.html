@@ -1,0 +1,77 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Quiz Details - Quiz Generator{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle"></i> {{ quiz.subject }}
+                    <span class="badge bg-{% if quiz.difficulty == 'Easy' %}success{% elif quiz.difficulty == 'Medium' %}warning{% else %}danger{% endif %} float-end">
+                        {{ quiz.difficulty }}
+                    </span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Questions:</strong> {{ quiz.number_of_questions }} |
+                    <strong>Created:</strong> {{ quiz.created_at|date:"M d, Y" }}
+                </div>
+                
+                <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-success">
+                    <i class="fas fa-play"></i> Take Quiz
+                </a>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+        
+        <!-- Questions Review -->
+        {% for question in questions %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="text-primary">Question {{ forloop.counter }}</h6>
+                <p class="fw-bold">{{ question.question_text }}</p>
+                
+                <div class="options">
+                    <div class="option-item mb-2 {% if question.correct_answer == 'A' %}text-success{% endif %}">
+                        <strong>A.</strong> {{ question.option_a }}
+                        {% if question.correct_answer == 'A' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div class="option-item mb-2 {% if question.correct_answer == 'B' %}text-success{% endif %}">
+                        <strong>B.</strong> {{ question.option_b }}
+                        {% if question.correct_answer == 'B' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div class="option-item mb-2 {% if question.correct_answer == 'C' %}text-success{% endif %}">
+                        <strong>C.</strong> {{ question.option_c }}
+                        {% if question.correct_answer == 'C' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div class="option-item mb-2 {% if question.correct_answer == 'D' %}text-success{% endif %}">
+                        <strong>D.</strong> {{ question.option_d }}
+                        {% if question.correct_answer == 'D' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if question.explanation %}
+                <div class="alert alert-info mt-2">
+                    <i class="fas fa-lightbulb"></i> 
+                    <strong>Explanation:</strong> {{ question.explanation }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

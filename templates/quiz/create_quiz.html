@@ -1,0 +1,117 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Create Quiz - Quiz Generator{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quiz-card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+        padding: 1rem 1.25rem;
+    }
+    
+    .quiz-card-header h5 {
+        color: #ffffff !important;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-generate {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-generate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header quiz-card-header">
+                <h5 class="mb-0"><i class="fas fa-magic me-2"></i> Generate Quiz</h5>
+            </div>
+            <div class="card-body bg-white">
+                <div class="alert alert-info border-0">
+                    <i class="fas fa-file-pdf me-2"></i>
+                    <strong>PDF:</strong> {{ pdf.title }}
+                </div>
+                
+                <form method="post" id="quizForm">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="subject" class="form-label">
+                            <i class="fas fa-heading me-1"></i>Subject Name
+                        </label>
+                        <input type="text" name="subject" class="form-control shadow-sm" id="subject" 
+                               placeholder="e.g., Python Programming, Mathematics, History" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="difficulty" class="form-label">
+                            <i class="fas fa-signal me-1"></i>Difficulty Level
+                        </label>
+                        <select name="difficulty" class="form-select shadow-sm" id="difficulty" required>
+                            <option value="">Select difficulty</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="num_questions" class="form-label">
+                            <i class="fas fa-list-ol me-1"></i>Number of Questions
+                        </label>
+                        <input type="number" name="num_questions" class="form-control shadow-sm" id="num_questions" 
+                               min="1" max="120" value="10" required>
+                        <div class="form-text text-muted">Enter a number between 1 and 120</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-generate btn-lg text-white" id="generateBtn">
+                            <i class="fas fa-robot me-2"></i>Generate Quiz with AI
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+                
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" style="display: none;" class="text-center mt-4">
+                    <div class="loader"></div>
+                    <p class="mt-3">
+                        <i class="fas fa-brain fa-spin"></i> 
+                        Generating quiz questions with AI...
+                    </p>
+                    <p class="text-muted">This may take a few seconds</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('quizForm').addEventListener('submit', function() {
+    const btn = document.getElementById('generateBtn');
+    const spinner = document.getElementById('loadingSpinner');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Generating...';
+    spinner.style.display = 'block';
+});
+</script>
+{% endblock %}

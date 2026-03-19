@@ -1,0 +1,244 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Contact - QuizGenix{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-section {
+        padding: 40px 0;
+        min-height: calc(100vh - 200px);
+    }
+    .contact-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .contact-info-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 40px;
+        color: white;
+        height: 100%;
+    }
+    .contact-info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    .contact-info-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+    .contact-info-icon i {
+        font-size: 20px;
+    }
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    .btn-contact {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .btn-contact:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    .contact-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+    }
+    .divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.3);
+        margin: 30px 0;
+    }
+    @media (max-width: 768px) {
+        .contact-info-card {
+            margin-bottom: 30px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-section">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold">Get In Touch</h1>
+                <p class="lead text-muted">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Contact Info Column -->
+                <div class="col-lg-5">
+                    <div class="contact-info-card">
+                        <h3 class="mb-4">Contact Information</h3>
+                        <p class="mb-4">Fill up the form and our team will get back to you within 24 hours.</p>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <small class="opacity-75">Phone</small>
+                                <p class="mb-0 fw-bold">+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <small class="opacity-75">Email</small>
+                                <p class="mb-0 fw-bold">support@quizgenix.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <small class="opacity-75">Location</small>
+                                <p class="mb-0 fw-bold">123 Innovation Drive<br>Tech City, TC 10001</p>
+                            </div>
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <div class="social-links">
+                            <p class="mb-3">Follow us on:</p>
+                            <a href="#" class="text-white me-3 fs-5"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-white me-3 fs-5"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-white me-3 fs-5"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form Column -->
+                <div class="col-lg-7">
+                    <div class="contact-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <form method="POST" action="{% url 'contact' %}">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">
+                                            <i class="fas fa-user me-2 text-muted"></i>Full Name
+                                        </label>
+                                        <input type="text" class="form-control" id="name" name="name" 
+                                               placeholder="John Doe" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">
+                                            <i class="fas fa-envelope me-2 text-muted"></i>Email Address
+                                        </label>
+                                        <input type="email" class="form-control" id="email" name="email" 
+                                               placeholder="john@example.com" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <label for="subject" class="form-label">
+                                        <i class="fas fa-heading me-2 text-muted"></i>Subject
+                                    </label>
+                                    <input type="text" class="form-control" id="subject" name="subject" 
+                                           placeholder="How can we help you?">
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <label for="message" class="form-label">
+                                        <i class="fas fa-comment me-2 text-muted"></i>Message
+                                    </label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" 
+                                              placeholder="Write your message here..." required></textarea>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-contact text-white btn-lg w-100">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <h3>Frequently Asked Questions</h3>
+            </div>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            <strong>How does QuizGenix work?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            QuizGenix uses advanced AI algorithms to analyze your uploaded content (PDFs or topics) and automatically generates relevant quiz questions. Simply upload your material, and our system creates a complete quiz within minutes.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            <strong>Is QuizGenix free to use?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            We offer both free and premium plans. The free plan includes basic quiz generation features, while our premium plans unlock advanced features like unlimited quizzes, detailed analytics, and priority support.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 shadow-sm">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                            <strong>How can I get support?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            You can reach our support team by filling out the contact form above, emailing us at support@quizgenix.com, or using our live chat feature available 24/7 for premium users.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
