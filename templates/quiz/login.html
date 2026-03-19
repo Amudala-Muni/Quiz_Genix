@@ -1,41 +1,494 @@
 {% extends 'quiz/base.html' %}
 
-{% block title %}Login - Quiz Generator{% endblock %}
+{% block title %}Login - QuizGenix{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block navbar %}
+{% include 'quiz/auth_navbar.html' %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ===== LOGIN PAGE SPECIFIC STYLES ===== */
+    
+    /* Override body padding for auth pages - centered layout */
+    body {
+        padding-top: 60px !important;
+        display: flex;
+        align-items: center;
+        min-height: 100vh;
+    }
+    
+    .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+    
+    /* Auth Page Container */
+    .auth-page-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+    
+    /* Glassmorphism Card */
+    .auth-card {
+        background: rgba(31, 41, 55, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                    0 0 40px rgba(59, 130, 246, 0.1);
+        padding: 0;
+        overflow: hidden;
+        max-width: 440px;
+        width: 100%;
+    }
+    
+    .auth-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #2563eb, #7c3aed, #ec4899);
+    }
+    
+    /* Card Header */
+    .auth-card-header {
+        padding: 2.5rem 2.5rem 1.5rem;
+        text-align: center;
+    }
+    
+    .auth-logo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        border-radius: 20px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+    }
+    
+    .auth-logo i {
+        font-size: 2rem;
+        color: white;
+    }
+    
+    .auth-card-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #f8fafc;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+    }
+    
+    .auth-card-subtitle {
+        color: #94a3b8;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+    
+    /* Card Body */
+    .auth-card-body {
+        padding: 1rem 2.5rem 2.5rem;
+    }
+    
+    /* Form Groups */
+    .auth-form-group {
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+    
+    .auth-form-group label {
+        display: block;
+        color: #e2e8f0;
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .input-icon-wrapper {
+        position: relative;
+    }
+    
+    .input-icon-wrapper .form-control {
+        padding-left: 3rem;
+        height: 52px;
+        background: rgba(17, 24, 39, 0.8);
+        border: 2px solid #374151;
+        border-radius: 14px;
+        color: #f8fafc;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .input-icon-wrapper .form-control:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2),
+                    0 0 25px rgba(139, 92, 246, 0.15);
+        background: rgba(17, 24, 39, 0.9);
+        color: #f8fafc;
+    }
+    
+    .input-icon-wrapper .form-control::placeholder {
+        color: #6b7280;
+    }
+    
+    .input-icon-wrapper .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+    
+    .input-icon-wrapper .form-control:focus ~ .input-icon,
+    .input-icon-wrapper .form-control:not(:placeholder-shown) ~ .input-icon {
+        color: #8b5cf6;
+    }
+    
+    /* Password Toggle */
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0;
+        transition: color 0.3s ease;
+    }
+    
+    .password-toggle:hover {
+        color: #8b5cf6;
+    }
+    
+    /* Remember Me & Forgot Password */
+    .auth-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .form-check {
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+    
+    .form-check-input {
+        width: 1.125rem;
+        height: 1.125rem;
+        background-color: rgba(17, 24, 39, 0.8);
+        border: 2px solid #374151;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-right: 0.5rem;
+    }
+    
+    .form-check-input:checked {
+        background-color: #8b5cf6;
+        border-color: #8b5cf6;
+    }
+    
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+        border-color: #8b5cf6;
+    }
+    
+    .form-check-label {
+        color: #cbd5e1;
+        cursor: pointer;
+    }
+    
+    .forgot-password {
+        color: #8b5cf6;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .forgot-password:hover {
+        color: #a78bfa;
+        text-decoration: underline;
+    }
+    
+    /* Submit Button */
+    .btn-auth-submit {
+        width: 100%;
+        height: 52px;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-auth-submit::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .btn-auth-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5),
+                    0 0 30px rgba(37, 99, 235, 0.3);
+    }
+    
+    .btn-auth-submit:hover::before {
+        left: 100%;
+    }
+    
+    .btn-auth-submit:active {
+        transform: translateY(0);
+    }
+    
+    /* Divider */
+    .auth-divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1.75rem 0;
+    }
+    
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        flex: 1;
+        border-top: 1px solid #374151;
+    }
+    
+    .auth-divider span {
+        padding: 0 1rem;
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+    
+    /* Register Link */
+    .auth-footer {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.95rem;
+    }
+    
+    .auth-footer a {
+        color: #8b5cf6;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .auth-footer a:hover {
+        color: #a78bfa;
+        text-decoration: underline;
+    }
+    
+    /* Error Messages */
+    .invalid-feedback {
+        display: block;
+        color: #f87171;
+        font-size: 0.8rem;
+        margin-top: 0.375rem;
+    }
+    
+    .form-control.is-invalid {
+        border-color: #ef4444;
+    }
+    
+    .form-control.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 576px) {
+        .auth-page-wrapper {
+            padding: 1rem;
+        }
+        
+        .auth-card {
+            border-radius: 20px;
+        }
+        
+        .auth-card-header {
+            padding: 2rem 1.5rem 1rem;
+        }
+        
+        .auth-card-body {
+            padding: 1rem 1.5rem 2rem;
+        }
+        
+        .auth-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+        }
+        
+        .auth-logo i {
+            font-size: 1.5rem;
+        }
+        
+        .auth-card-title {
+            font-size: 1.5rem;
+        }
+        
+        .auth-options {
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+        
+        .forgot-password {
+            align-self: flex-end;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4">
-        <div class="card">
-            <div class="card-body p-5">
-                <h2 class="text-center mb-4">
-                    <i class="fas fa-brain text-primary"></i> Quiz Generator
-                </h2>
-                <h5 class="text-center mb-4">Login</h5>
+<div class="auth-page-wrapper">
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <div class="auth-logo">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h1 class="auth-card-title">Welcome Back</h1>
+            <p class="auth-card-subtitle">Sign in to continue to QuizGenix</p>
+        </div>
+        
+        <div class="auth-card-body">
+            <form method="post" action="{% url 'login' %}" id="loginForm">
+                {% csrf_token %}
                 
-                <form method="post" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label for="id_username" class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control" id="id_username" required>
+                <!-- Username Field -->
+                <div class="auth-form-group">
+                    <label for="id_username" class="form-label">Username</label>
+                    <div class="input-icon-wrapper">
+                        <input type="text" 
+                               name="username" 
+                               class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                               id="id_username" 
+                               placeholder="Enter your username"
+                               required
+                               autocomplete="username">
+                        <i class="fas fa-user input-icon"></i>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="id_password" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="id_password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                </form>
+                    {% if form.username.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
                 
-                <p class="text-center">
+                <!-- Password Field -->
+                <div class="auth-form-group">
+                    <label for="id_password" class="form-label">Password</label>
+                    <div class="input-icon-wrapper">
+                        <input type="password" 
+                               name="password" 
+                               class="form-control {% if form.password.errors %}is-invalid{% endif %}" 
+                               id="id_password" 
+                               placeholder="Enter your password"
+                               required
+                               autocomplete="current-password">
+                        <i class="fas fa-lock input-icon"></i>
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            <i class="fas fa-eye-slash" id="passwordIcon"></i>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Remember Me & Forgot Password -->
+                <div class="auth-options">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn-auth-submit">
+                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                </button>
+            </form>
+            
+            <!-- Register Link -->
+            <div class="auth-footer mt-4">
+                <p class="mb-0">
                     Don't have an account? 
-                    <a href="{% url 'register' %}">Register here</a>
+                    <a href="{% url 'register' %}">Create one now</a>
                 </p>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Password Toggle Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordToggle = document.getElementById('passwordToggle');
+        const passwordInput = document.getElementById('id_password');
+        const passwordIcon = document.getElementById('passwordIcon');
+        
+        if (passwordToggle && passwordInput) {
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                if (type === 'text') {
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                } else {
+                    passwordIcon.classList.remove('fa-eye');
+                    passwordIcon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

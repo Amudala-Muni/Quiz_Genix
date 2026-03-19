@@ -1,0 +1,91 @@
+{% load static %}
+<nav class="auth-navbar navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="{% url 'landing' %}">
+            <i class="fas fa-brain"></i>
+            QuizGenix
+        </a>
+
+        <!-- Desktop - Back to Home -->
+        <div class="d-none d-lg-flex align-items-center">
+            <span class="auth-nav-text">
+                <i class="fas fa-arrow-left me-2"></i>
+                Back to 
+                <a href="{% url 'landing' %}" class="auth-nav-link">Home</a>
+            </span>
+        </div>
+
+        <!-- Mobile - Back Button -->
+        <div class="d-lg-none">
+            <a href="{% url 'landing' %}" class="btn btn-outline-light btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Home
+            </a>
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* ===== AUTH NAVBAR - Minimal for Login/Register Pages ===== */
+    .auth-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        min-height: 60px;
+        padding: 0;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .auth-navbar .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 60px;
+    }
+    
+    /* Logo */
+    .auth-navbar .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        text-decoration: none;
+        color: #f8fafc;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .auth-navbar .navbar-brand i {
+        font-size: 1.3rem;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Auth Nav Text */
+    .auth-nav-text {
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+    
+    .auth-nav-link {
+        color: #60a5fa;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .auth-nav-link:hover {
+        color: #93c5fd;
+    }
+</style>
