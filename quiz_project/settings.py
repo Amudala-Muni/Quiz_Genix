@@ -23,6 +23,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['quiz-genix.onrender.com']
 
+CSRF_TRUSTED_ORIGINS = ['https://quiz-genix.onrender.com']
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
